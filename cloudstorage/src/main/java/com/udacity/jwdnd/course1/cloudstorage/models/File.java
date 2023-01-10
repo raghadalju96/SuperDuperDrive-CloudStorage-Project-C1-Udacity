@@ -11,7 +11,7 @@ public class File {
 
     private String fileSize;
 
-    private User userId;
+    private Integer userId;
 
     private Blob fileData;
 
@@ -20,7 +20,7 @@ public class File {
 
     }
 
-    public File(Integer fileId, String fileName, String contentType, String fileSize, User userId, Blob fileData) {
+    public File(Integer fileId, String fileName, String contentType, String fileSize, Integer userId, Blob fileData) {
         this.fileId = fileId;
         this.fileName = fileName;
         this.contentType = contentType;
@@ -61,11 +61,11 @@ public class File {
         this.fileSize = fileSize;
     }
 
-    public User getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(User userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
