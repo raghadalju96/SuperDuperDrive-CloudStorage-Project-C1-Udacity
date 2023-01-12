@@ -22,7 +22,6 @@ public class CredentialController {
     private UserService userService;
 
     public CredentialController(CredentialService credentialService, UserService userService){
-
         this.credentialService = credentialService;
         this.userService = userService;
     }
@@ -35,28 +34,21 @@ public class CredentialController {
         if(credential.getCredentialId() == null ){
             try {
                 this.credentialService.addCredential(credential , user.getUserId());
-                model.addAttribute("credentialSuccess" , "");
+                return "redirect:/result?success";
             }
             catch (Exception e){
-                model.addAttribute("credentialSuccess" , "");
+                return "redirect:/result?error";
             }
         }
         else{
             try {
                 this.credentialService.updateCredential(credential);
-                model.addAttribute("noteUploadSuccess", "true");
+                return "redirect:/result?success";
             }
             catch (Exception e){
-               // noteUploadError = e.toString();
-                model.addAttribute("noteError", "noteUploadError");
+                System.out.println(e);
+                return "redirect:/result?error";
             }}
-
-        this.credentialService.getCredentials(user.getUserId());
-        model.addAttribute("credentials", this.credentialService.getCredentials(user.getUserId()));
-        System.out.println( this.credentialService.getCredentials(user.getUserId()));
-        System.out.println("anghaaam");
-        System.out.println(credential.getUserName());
-        return "result";
     }
 
     @RequestMapping("/deleteCredential/{credentialId}")
@@ -64,12 +56,12 @@ public class CredentialController {
 
         try{
             this.credentialService.deleteCredential(credentialId);
+            return "redirect:/result?success";
         }
         catch (Exception e){
-         //   noteDeleteError = e.toString();
-            model.addAttribute("noteDeleteError", "noteDeleteError");
+            return "redirect:/result?error";
         }
 
-        return "result";
+
     }
 }

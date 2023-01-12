@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.mappers;
 
 
 import com.udacity.jwdnd.course1.cloudstorage.models.File;
+import com.udacity.jwdnd.course1.cloudstorage.models.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -23,5 +24,9 @@ public interface FileMapper {
 
     @Delete("DELETE FROM FILES WHERE fileId = #{fileId}")
     void deleteFile(Integer fileId);
+
+
+    @Select("SELECT * FROM FILES WHERE fileName = #{fileName}")
+    File getFile(String fileName);
 
 }

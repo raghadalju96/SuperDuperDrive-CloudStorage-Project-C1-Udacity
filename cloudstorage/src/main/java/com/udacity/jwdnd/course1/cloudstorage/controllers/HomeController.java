@@ -42,18 +42,4 @@ public class HomeController {
 
         return "home";
     }
-
-//    @PostMapping("/addNote")
-//    public String addNote(Note note , User user, Model model){
-//        System.out.println("raghad meeeej");
-//        this.noteService.addNote(note , user);
-//
-//        model.addAttribute("noteTitle", note.getNoteTitle());
-//        model.addAttribute("noteDescription", note.getNoteDescription());
-//        System.out.println("xxx");
-//        System.out.println(model.getAttribute("noteDescription"));
-//
-//
-//        return "result";
-//    }
 }

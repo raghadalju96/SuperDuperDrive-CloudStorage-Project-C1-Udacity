@@ -26,12 +26,12 @@ public class CredentialService {
         return this.credentialMapper.insertCredential(credential);
     }
 
-    public Credential updateCredential(Credential credential){
+    public void updateCredential(Credential credential){
         credential.setUrl(credential.getUrl());
         credential.setUserName(credential.getUserName());
         credential.setPassword(credential.getPassword());
 
-        return this.credentialMapper.updateCredential(credential);
+        this.credentialMapper.updateCredential(credential);
     }
 
     public List<Credential> getCredentials(int userId){

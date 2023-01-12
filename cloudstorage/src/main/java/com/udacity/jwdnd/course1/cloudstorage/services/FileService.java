@@ -26,6 +26,7 @@ public class FileService {
 
 
     public int addFile(MultipartFile file, int userId) throws IOException {
+
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         File fileModel = new File();
         fileModel.setFileName(fileName);
@@ -33,11 +34,13 @@ public class FileService {
         fileModel.setFileSize(file.getSize());
         fileModel.setUserId(userId);
         fileModel.setFileData(file.getBytes());
-        System.out.println("fillllleee");
-
-        System.out.println(fileModel.getFileName());
 
         return this.fileMapper.insertFile(fileModel);
+    }
+
+
+    public boolean isFileNameAvailable(String fileName){
+        return this.fileMapper.getFile(fileName) == null;
     }
 
 

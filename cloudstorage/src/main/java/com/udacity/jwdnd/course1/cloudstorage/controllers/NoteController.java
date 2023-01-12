@@ -8,10 +8,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -35,49 +32,51 @@ public class NoteController {
     public String addNote(Note note , Authentication auth, Model model) throws IOException {
         User user = this.userService.getUser(auth.getName()) ;
 
-        String noteUploadError = null;
-        String noteUploadSuccess = null;
+//        String noteUploadError = null;
+//        String noteUploadSuccess = null;
 
         if(note.getNoteId() == null) {
 
             try {
                 this.noteService.addNote(note, user);
-                noteUploadSuccess = "true";
-                model.addAttribute("noteUploadSuccess", noteUploadSuccess);
+//                noteUploadSuccess = "true";
+//                model.addAttribute("noteUploadSuccess", noteUploadSuccess);
+                return "redirect:/result?success";
             }
             catch (Exception e){
-                noteUploadError = e.toString();
-                model.addAttribute("noteError", noteUploadError);
+//                noteUploadError = e.toString();
+//                model.addAttribute("noteError", noteUploadError);
+                return "redirect:/result?error";
             }
         }
         else {
             try {
                 this.noteService.updateNote(note);
-                model.addAttribute("noteUploadSuccess", "true");
+              //  model.addAttribute("noteUploadSuccess", "true");
+                return "redirect:/result?success";
             }
             catch (Exception e){
-                noteUploadError = e.toString();
-                model.addAttribute("noteError", noteUploadError);
+//                noteUploadError = e.toString();
+//                model.addAttribute("noteError", noteUploadError);
+                return "redirect:/result?error";
             }}
-        this.noteService.getNotes(user);
-        model.addAttribute("notes",  this.noteService.getNotes(user));
-        return "result";
     }
 
-    @GetMapping("/deleteNote/{noteId}")
+    @RequestMapping("/deleteNote/{noteId}")
     public String deleteNote(@PathVariable int noteId, Note note , User user, Model model)throws IOException{
-        String noteDeleteError = null;
-        String noteDeleteSuccess = null;
+//        String noteDeleteError = null;
+//        String noteDeleteSuccess = null;
         try {
             this.noteService.deleteNote(noteId);
-            noteDeleteSuccess = "true";
-            model.addAttribute("noteDeleteSuccess", "true");
-        }
-        catch (Exception e){
-            noteDeleteError = e.toString();
-            model.addAttribute("noteDeleteError", noteDeleteError);
+//            noteDeleteSuccess = "true";
+//            model.addAttribute("noteDeleteSuccess", "true");
+            return "redirect:/result?success";
 
         }
-        return "result";
+        catch (Exception e){
+         //   noteDeleteError = e.toString();
+           //  model.addAttribute("noteDeleteError", noteDeleteError);
+            return "redirect:/result?error";
+        }
     }
 }

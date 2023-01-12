@@ -12,6 +12,7 @@ public class ResultController {
 
     @GetMapping()
     public String home(){
+
         return "result";
     }
 }

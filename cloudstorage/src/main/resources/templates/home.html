@@ -14,6 +14,11 @@
                 <form action="#" th:action="@{/logout}" method="POST">
                     <button id="logout-button" type="submit" class="btn btn-dark float-right">Logout</button>
                 </form>
+
+<!--                <div id="error-msg" th:if="${fileError}" class="alert alert-danger">-->
+<!--                    <span th:text="${fileError}"></span>-->
+<!--                </div>-->
+
             </div>
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
@@ -204,10 +209,10 @@
             }
 
             // For opening the credentials modal
-            function showCredentialModal(credentialId, url, username, password) {
+            function showCredentialModal(credentialId, url, userName, password) {
                 $('#credential-id').val(credentialId ? credentialId : '');
                 $('#credential-url').val(url ? url : '');
-                $('#credential-username').val(username ? username : '');
+                $('#credential-userName').val(userName ? userName : '');
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
