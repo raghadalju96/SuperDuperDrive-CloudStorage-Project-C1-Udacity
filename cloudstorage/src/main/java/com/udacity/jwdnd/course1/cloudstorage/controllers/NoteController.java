@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
+
 
 @Controller
 //@RequestMapping("/note")
@@ -29,44 +31,53 @@ public class NoteController {
         this.userService = userService;
     }
 
-
-
-//         @GetMapping()
-//        public Note[] getAllNotes(){
-//          return this.noteMapper.getNotes();
-//        }
-
-
     @PostMapping("/addNote")
-    public String addNote(@RequestParam("noteId") Integer noteId, Note note , Authentication auth, Model model){
-        User user = this.userService.getUser(auth.getName());
+    public String addNote(Note note , Authentication auth, Model model) throws IOException {
+        User user = this.userService.getUser(auth.getName()) ;
 
-        if(noteId == null) {
-            this.noteService.addNote(note, user);
+        String noteUploadError = null;
+        String noteUploadSuccess = null;
+
+        if(note.getNoteId() == null) {
+
+            try {
+                this.noteService.addNote(note, user);
+                noteUploadSuccess = "true";
+                model.addAttribute("noteUploadSuccess", noteUploadSuccess);
+            }
+            catch (Exception e){
+                noteUploadError = e.toString();
+                model.addAttribute("noteError", noteUploadError);
+            }
         }
-
         else {
-            this.noteService.updateNote(note);
-        }
+            try {
+                this.noteService.updateNote(note);
+                model.addAttribute("noteUploadSuccess", "true");
+            }
+            catch (Exception e){
+                noteUploadError = e.toString();
+                model.addAttribute("noteError", noteUploadError);
+            }}
         this.noteService.getNotes(user);
-
-
         model.addAttribute("notes",  this.noteService.getNotes(user));
-        System.out.println(model.getAttribute("notes"));
-
-        System.out.println("xxx");
-        System.out.println(model.getAttribute("noteDescription"));
-
         return "result";
     }
 
     @GetMapping("/deleteNote/{noteId}")
-    public String deleteNote(@PathVariable int noteId, Note note , User user, Model model){
-        System.out.println("delete");
+    public String deleteNote(@PathVariable int noteId, Note note , User user, Model model)throws IOException{
+        String noteDeleteError = null;
+        String noteDeleteSuccess = null;
+        try {
+            this.noteService.deleteNote(noteId);
+            noteDeleteSuccess = "true";
+            model.addAttribute("noteDeleteSuccess", "true");
+        }
+        catch (Exception e){
+            noteDeleteError = e.toString();
+            model.addAttribute("noteDeleteError", noteDeleteError);
 
-        this.noteService.deleteNote(noteId);
-
-
+        }
         return "result";
     }
 }
