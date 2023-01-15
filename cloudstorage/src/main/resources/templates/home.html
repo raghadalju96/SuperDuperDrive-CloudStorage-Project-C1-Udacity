@@ -14,11 +14,6 @@
                 <form action="#" th:action="@{/logout}" method="POST">
                     <button id="logout-button" type="submit" class="btn btn-dark float-right">Logout</button>
                 </form>
-
-<!--                <div id="error-msg" th:if="${fileError}" class="alert alert-danger">-->
-<!--                    <span th:text="${fileError}"></span>-->
-<!--                </div>-->
-
             </div>
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
@@ -68,7 +63,7 @@
 
 
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                        <button id="note-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
 
@@ -85,8 +80,8 @@
                                 <tbody>
                                     <tr th:each="note:${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success"  th:onclick="javascript:showNoteModal([[${note.noteId}]],[[${note.noteTitle}]],[[${note.noteDescription}]])">Edit</button>
-                                            <a th:href="@{/deleteNote/{noteId}(noteId=${note.noteId})}" class="btn btn-danger">Delete</a>
+                                            <button id="edit-note" type="button" class="btn btn-success"  th:onclick="javascript:showNoteModal([[${note.noteId}]],[[${note.noteTitle}]],[[${note.noteDescription}]])">Edit</button>
+                                            <a id="delete-note" th:href="@{/deleteNote/{noteId}(noteId=${note.noteId})}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th scope="row" th:text="${note.noteTitle}">Example Note Title</th>
                                         <td th:text="${note.noteDescription}">Example Note Description </td>
@@ -120,14 +115,14 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
+                                        <button id="saveNoteButton" type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
+                        <button id="credential-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
 
@@ -144,8 +139,8 @@
                                 <tbody>
                                 <tr th:each="credential:${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success"  th:onclick="javascript:showCredentialModal([[${credential.credentialId}]],[[${credential.url}]],[[${credential.userName}]], [[${credential.password}]])">Edit</button>
-                                        <a th:href="@{/deleteCredential/{credentialId}(credentialId=${credential.credentialId})}" class="btn btn-danger">Delete</a>
+                                        <button id="edit-credential" type="button" class="btn btn-success"  th:onclick="javascript:showCredentialModal([[${credential.credentialId}]],[[${credential.url}]],[[${credential.userName}]], [[${credential.password}]])">Edit</button>
+                                        <a id="delete-credential" th:href="@{/deleteCredential/{credentialId}(credentialId=${credential.credentialId})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th th:text="${credential.url}" scope="row">Example Credential URL</th>
                                     <td th:text="${credential.userName}">Example Credential Username</td>
@@ -184,7 +179,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
+                                        <button id="saveCredentialButton" type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
                                     </div>
                                 </div>
                             </div>
@@ -209,13 +204,29 @@
             }
 
             // For opening the credentials modal
-            function showCredentialModal(credentialId, url, userName, password) {
+        async function showCredentialModal(credentialId, url, userName, password) {
+
+              let decryptedPassword = ''
+               if(credentialId) {
+                decryptedPassword = await fetchDecodedPassword(credentialId);
+        }
                 $('#credential-id').val(credentialId ? credentialId : '');
                 $('#credential-url').val(url ? url : '');
                 $('#credential-userName').val(userName ? userName : '');
-                $('#credential-password').val(password ? password : '');
+                $('#credential-password').val(decryptedPassword ? decryptedPassword : '');
                 $('#credentialModal').modal('show');
             }
+
+                async function fetchDecodedPassword(credentialId) {
+                let port = location.port;
+                let response = await fetch(`http://localhost:${port}/decode-password?credentialId=${credentialId}`)
+                if (response.ok) {
+                let data = await response.json();
+                 let result = JSON.parse(JSON.stringify(data));
+                 return result.decryptedPassword;
+                 } else {
+                  alert(response.status);
+                  }}
         </script>
     </body>
 </html>

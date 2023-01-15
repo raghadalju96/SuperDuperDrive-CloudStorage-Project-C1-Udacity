@@ -8,9 +8,9 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.io.IOException;
 
@@ -42,6 +42,7 @@ public class CredentialController {
         }
         else{
             try {
+
                 this.credentialService.updateCredential(credential);
                 return "redirect:/result?success";
             }
@@ -61,7 +62,11 @@ public class CredentialController {
         catch (Exception e){
             return "redirect:/result?error";
         }
+    }
 
-
+    @GetMapping("/decode-password")
+    @ResponseBody
+    public Map<String, String> decodePassword(@RequestParam Integer credentialId){
+        return this.credentialService.getDecryptPassword(credentialId);
     }
 }

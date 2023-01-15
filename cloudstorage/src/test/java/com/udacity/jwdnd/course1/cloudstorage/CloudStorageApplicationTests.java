@@ -119,6 +119,41 @@ class CloudStorageApplicationTests {
 
 	}
 
+
+
+	private void doLogout(){
+
+		// Create a test account
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("logout-button")));
+		WebElement logoutButton = driver.findElement(By.id("logout-button"));
+		logoutButton.click();
+
+		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+
+
+	}
+
+	@Test
+	public void testAccessHomePage(){
+		doLogout();
+//		driver.get("http://localhost:" + this.port + "/home");
+//		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+		getUnauthorizedHomePage();
+	}
+
+	@Test
+	public void getUnauthorizedHomePage() {
+		driver.get("http://localhost:" + this.port + "/home");
+		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+	}
+
+
+
 	/**
 	 * PLEASE DO NOT DELETE THIS TEST. You may modify this test to work with the 
 	 * rest of your code. 
@@ -136,9 +171,6 @@ class CloudStorageApplicationTests {
 		doMockSignUp("Redirection","Test","RT","123");
 		
 		// Check if we have been redirected to the log in page.
-		System.out.println("pooooooorrrrrt");
-		System.out.println(this.port);
-		System.out.println(driver.getCurrentUrl());
 		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
 	}
 
@@ -203,6 +235,204 @@ class CloudStorageApplicationTests {
 
 	}
 
+
+
+	@Test
+	public void addNoteTest(){
+		addNote();
+	}
+
+
+	public void addNote(){
+
+		// Create a test account
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
+
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		WebElement notesTab = driver.findElement(By.id("nav-notes-tab"));
+		notesTab.click();
+
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-button")));
+		WebElement noteButton = driver.findElement(By.id("note-button"));
+		noteButton.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("noteModal")));
+
+		WebElement noteTitle = driver.findElement(By.id("note-title"));
+		noteTitle.sendKeys("First Note");
+
+
+		WebElement noteDescription = driver.findElement(By.id("note-description"));
+		noteDescription.sendKeys("First Description");
+
+
+		WebElement noteSubmitButton = driver.findElement(By.id("saveNoteButton"));
+		noteSubmitButton.click();
+
+		Assertions.assertEquals("http://localhost:" + this.port + "/result?success", driver.getCurrentUrl());
+
+	}
+
+
+	@Test
+	public void editNote(){
+
+		addNote();
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		WebElement notesTab = driver.findElement(By.id("nav-notes-tab"));
+		notesTab.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("edit-note")));
+		WebElement editNoteButton = driver.findElement(By.id("edit-note"));
+		editNoteButton.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("noteModal")));
+
+		WebElement noteTitle = driver.findElement(By.id("note-title"));
+		noteTitle.sendKeys("Edit Note");
+
+
+		WebElement noteDescription = driver.findElement(By.id("note-description"));
+		noteDescription.sendKeys("Edit Description");
+
+
+		WebElement noteSubmitButton = driver.findElement(By.id("saveNoteButton"));
+		noteSubmitButton.click();
+
+		Assertions.assertEquals("http://localhost:" + this.port + "/result?success", driver.getCurrentUrl());
+
+	}
+
+
+	@Test
+	public void deleteNote(){
+
+		addNote();
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+		WebElement notesTab = driver.findElement(By.id("nav-notes-tab"));
+		notesTab.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("delete-note")));
+		WebElement deleteNoteButton = driver.findElement(By.id("delete-note"));
+		deleteNoteButton.click();
+
+		Assertions.assertEquals("http://localhost:" + this.port + "/result?success", driver.getCurrentUrl());
+
+	}
+
+	@Test
+	public void addCredentialTest(){
+		addCredential();
+	}
+	public void addCredential(){
+
+		// Create a test account
+		doMockSignUp("URL","Test","UT","123");
+		doLogIn("UT", "123");
+
+
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		WebElement notesTab = driver.findElement(By.id("nav-credentials-tab"));
+		notesTab.click();
+
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-button")));
+		WebElement credentialButton = driver.findElement(By.id("credential-button"));
+		credentialButton.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialModal")));
+
+		WebElement credentialRrl = driver.findElement(By.id("credential-url"));
+		credentialRrl.sendKeys("https://www.udacity.com/");
+
+
+		WebElement credentialUserName = driver.findElement(By.id("credential-userName"));
+		credentialUserName.sendKeys("admin");
+
+		WebElement credentialPassword = driver.findElement(By.id("credential-password"));
+		credentialPassword.sendKeys("181818");
+
+
+		WebElement CredentialSubmitButton = driver.findElement(By.id("saveCredentialButton"));
+		CredentialSubmitButton.click();
+
+		Assertions.assertEquals("http://localhost:" + this.port + "/result?success", driver.getCurrentUrl());
+
+	}
+
+	@Test
+	public void editCredential(){
+
+
+		addCredential();
+
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		WebElement notesTab = driver.findElement(By.id("nav-credentials-tab"));
+		notesTab.click();
+
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("edit-credential")));
+		WebElement editCredentialButton = driver.findElement(By.id("edit-credential"));
+		editCredentialButton.click();
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialModal")));
+
+		WebElement credentialRrl = driver.findElement(By.id("credential-url"));
+		credentialRrl.sendKeys("https://www.udacity.com/");
+
+
+		WebElement credentialUserName = driver.findElement(By.id("credential-userName"));
+		credentialUserName.sendKeys("user");
+
+		WebElement credentialPassword = driver.findElement(By.id("credential-password"));
+		credentialPassword.sendKeys("161616");
+
+
+		WebElement CredentialSubmitButton = driver.findElement(By.id("saveCredentialButton"));
+		CredentialSubmitButton.click();
+
+		Assertions.assertEquals("http://localhost:" + this.port + "/result?success", driver.getCurrentUrl());
+
+	}
+
+	@Test
+	public void deleteCredential(){
+
+		addCredential();
+		driver.get("http://localhost:" + this.port + "/home");
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+		WebElement notesTab = driver.findElement(By.id("nav-credentials-tab"));
+		notesTab.click();
+
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("delete-credential")));
+		WebElement deleteCredentialButton = driver.findElement(By.id("delete-credential"));
+		deleteCredentialButton.click();
+
+		Assertions.assertEquals("http://localhost:" + this.port + "/result?success", driver.getCurrentUrl());
+
+
+	}
 
 
 }
