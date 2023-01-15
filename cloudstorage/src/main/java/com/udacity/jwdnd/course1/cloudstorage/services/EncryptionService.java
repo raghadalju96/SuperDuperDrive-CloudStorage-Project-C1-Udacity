@@ -26,10 +26,6 @@ public class EncryptionService {
          this.encodedKey = Base64.getEncoder().encodeToString(key);
     }
 
-    public String getEncodedKey() {
-        return encodedKey;
-    }
-
     public String encryptValue(String data) {
         byte[] encryptedValue = null;
 
